@@ -2,6 +2,15 @@
   "name": "bsquare-widget",
   "version": "0.1.0",
   "description": "Injectable AI chat widget with host-action support for AG-UI / PydanticAI backends",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getbsquare/bsquare",
+    "directory": "packages/widget"
+  },
+  "homepage": "https://github.com/getbsquare/bsquare/tree/main/packages/widget",
+  "bugs": {
+    "url": "https://github.com/getbsquare/bsquare/issues"
+  },
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
