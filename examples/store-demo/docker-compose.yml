@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../.. # bsquare/ monorepo root
+      dockerfile: examples/store-demo/backend/Dockerfile
+    container_name: bsquare-store-demo-backend
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - BSQUARE_MODEL=${BSQUARE_MODEL:-google-gla:gemini-2.5-flash}
+      # Ollama (local or Cloud): set OLLAMA_BASE_URL (+ OLLAMA_API_KEY for Cloud).
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-}
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY:-}
+    expose:
+      - "8000"
+    restart: unless-stopped
+    # For LOCAL Ollama on the host, set
+    #   OLLAMA_BASE_URL=http://host.docker.internal:11434/v1
+    # and uncomment the next two lines (Linux needs the host-gateway mapping):
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: bsquare-store-demo-web
+    restart: unless-stopped
+    expose:
+      - "80"
+    depends_on:
+      - backend
+    environment:
+      - BACKEND_URL=http://backend:8000

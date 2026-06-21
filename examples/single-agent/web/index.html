@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BSquare single-agent demo</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 40px;
+        max-width: 720px;
+      }
+      #banner {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        display: none;
+      }
+      #banner[data-level="info"] {
+        display: block;
+        background: #e0f2fe;
+      }
+      #banner[data-level="success"] {
+        display: block;
+        background: #dcfce7;
+      }
+      #banner[data-level="error"] {
+        display: block;
+        background: #fee2e2;
+      }
+      section {
+        margin-top: 24px;
+        padding-top: 12px;
+        border-top: 1px solid #e5e7eb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="home">Acme Store</h1>
+    <p>Open the chat (bottom-right) and try:</p>
+    <ul>
+      <li>"take me to the reports section"</li>
+      <li>"notify me that my order shipped"</li>
+      <li>"what time is it on the server?"</li>
+      <li>"chart our quarterly sales: Q1 120, Q2 210, Q3 180, Q4 260"</li>
+    </ul>
+    <div id="banner" role="status"></div>
+
+    <section id="reports" hidden>
+      <h2>Reports</h2>
+      <p>Your reports live here.</p>
+    </section>
+    <section id="orders" hidden>
+      <h2>Orders</h2>
+      <p>Your orders live here.</p>
+    </section>
+
+    <script src="./bsquare-widget.global.js"></script>
+    <script>
+      const hostActions = [
+        {
+          name: "navigate_to_page",
+          description: "Reveal and scroll to a named section of the page",
+          parameters: {
+            page: {
+              type: "string",
+              description: "Section id (reports, orders, home)",
+              required: true,
+            },
+          },
+          handler: (params) => {
+            const target = window.document.getElementById(params.page);
+            if (!target) throw new Error("No section: " + params.page);
+            target.hidden = false;
+            target.scrollIntoView({ behavior: "smooth" });
+            return { success: true, page: params.page };
+          },
+        },
+        {
+          name: "show_notification",
+          description: "Show a notification banner to the user",
+          parameters: {
+            message: {
+              type: "string",
+              description: "Text to display",
+              required: true,
+            },
+            level: {
+              type: "string",
+              description: "info | success | error",
+              required: false,
+            },
+          },
+          handler: (params) => {
+            // This host action can fire twice (once from the streamed tool
+            // call, once from the agent-state sync) and one pass may arrive
+            // without args. Bail on an empty message so it can't blank the
+            // banner that the good pass already filled in.
+            if (!params || !params.message) {
+              return { success: false, error: "missing message" };
+            }
+            const b = window.document.getElementById("banner");
+            b.textContent = params.message;
+            b.dataset.level = params.level || "info";
+            return { success: true };
+          },
+        },
+        {
+          // A host action doesn't have to mutate the page — it can hand data
+          // back for the widget to render. Returning { type: "chart", spec }
+          // makes the chat draw an inline (clickable-to-enlarge) chart.
+          name: "render_chart",
+          description: "Draw a bar or line chart inside the chat",
+          parameters: {
+            title: {
+              type: "string",
+              description: "Chart title",
+              required: true,
+            },
+            labels: {
+              type: "array",
+              description: "X-axis labels",
+              required: true,
+            },
+            values: {
+              type: "array",
+              description: "Y-axis numbers (same length as labels)",
+              required: true,
+            },
+            chart_type: {
+              type: "string",
+              description: "bar | line",
+              required: false,
+            },
+          },
+          handler: (params) => ({
+            success: true,
+            type: "chart",
+            spec: {
+              type: params.chart_type === "line" ? "line" : "bar",
+              title: params.title,
+              labels: params.labels,
+              values: params.values,
+            },
+          }),
+        },
+      ];
+
+      window.BSquare.mountAgent({
+        apiUrl: "http://localhost:8000",
+        theme: "dark", // BSquare is dark-first; the dark widget on this light page shows Shadow-DOM isolation
+        hostActions,
+      });
+    </script>
+  </body>
+</html>

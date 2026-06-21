@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────
+# BSquare Multi-tenant Example — Docker Compose
+# 
+# One dispatcher routes a single widget bundle to multiple tenant
+# backends, each with their own API endpoint and data.
+#
+# Usage:
+#   GEMINI_API_KEY=... docker compose up --build
+#
+# Access:
+#   - Tenant A: http://localhost/tenant-a
+#   - Tenant B: http://localhost/tenant-b
+#
+# The dispatcher.py proxies requests based on X-Tenant-ID header
+# or ?tenant_id= query parameter to the appropriate backend.
+# ─────────────────────────────────────────────────────────────
+version: '3.8'
+
+services:
+  dispatcher:
+    build:
+      context: ../.. # bsquare/ monorepo root
+      dockerfile: examples/multi-tenant/Dockerfile.dispatcher
+    container_name: bsquare-multi-tenant-dispatcher
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+    expose:
+      - "8000"
+    depends_on:
+      - backend-a
+      - backend-b
+    restart: unless-stopped
+
+  backend-a:
+    build:
+      context: ../.. # bsquare/ monorepo root
+      dockerfile: examples/single-agent/backend/Dockerfile
+    container_name: bsquare-tenant-a-backend
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - BSQUARE_MODEL=${BSQUARE_MODEL:-google-gla:gemini-2.5-flash}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-}
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY:-}
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  backend-b:
+    build:
+      context: ../.. # bsquare/ monorepo root
+      dockerfile: examples/single-agent/backend/Dockerfile
+    container_name: bsquare-tenant-b-backend
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - BSQUARE_MODEL=${BSQUARE_MODEL:-google-gla:gemini-2.5-flash}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-}
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY:-}
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: bsquare-multi-tenant-web
+    restart: unless-stopped
+    expose:
+      - "80"
+    depends_on:
+      - dispatcher
+    environment:
+      - DISPATCHER_URL=http://dispatcher:8000

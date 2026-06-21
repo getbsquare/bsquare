@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tenant B — BSquare</title>
+    <style> body { font-family: system-ui, sans-serif; margin: 40px; } </style>
+  </head>
+  <body>
+    <h1 id="home">Tenant B</h1>
+    <p>This page routes through the dispatcher with <code>tenantId: "tenant-b"</code>.</p>
+    <div id="banner" role="status"></div>
+    <script src="./bsquare-widget.global.js"></script>
+    <script>
+      const hostActions = [
+        {
+          name: 'show_notification',
+          description: 'Show a notification banner',
+          parameters: { message: { type: 'string', required: true }, level: { type: 'string', required: false } },
+          handler: (p) => { const b = window.document.getElementById('banner'); b.textContent = p.message; return { success: true }; },
+        },
+      ];
+      window.BSquare.mountAgent({
+        apiUrl: 'http://localhost:8000',     // the dispatcher
+        tenantId: 'tenant-b',
+        apiToken: 'demo-token-tenant-b',
+        theme: 'light',
+        primaryColor: '#db2777',
+        hostActions,
+      });
+    </script>
+  </body>
+</html>

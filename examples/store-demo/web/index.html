@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Northwind Supply — BSquare store demo</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Geist:wght@400;500;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --font-display: 'Space Grotesk', system-ui, sans-serif;
+        --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --nw-green: #2f6b46;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: var(--font-sans); background: #f6f7f4; color: #1c2620; }
+      a { color: inherit; text-decoration: none; cursor: pointer; }
+
+      .nw-nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 24px;
+        padding: 0 30px; height: 62px; background: #fffefb; border-bottom: 1px solid #e6e7e1; }
+      .nw-logo { display: flex; align-items: center; gap: 9px; font-family: var(--font-display);
+        font-weight: 700; font-size: 18px; letter-spacing: -0.02em; color: #1f3326; }
+      .nw-leaf { width: 26px; height: 26px; border-radius: 8px; background: var(--nw-green);
+        display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
+      .nw-links { display: flex; gap: 22px; margin-left: 14px; }
+      .nw-links a { font-size: 14px; color: #48564d; font-weight: 500; padding: 4px 2px; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; }
+      .nw-links a:hover { color: #1f3326; }
+      .nw-links a.active { color: var(--nw-green); border-bottom-color: var(--nw-green); }
+      .nw-nav-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+      .nw-cart { position: relative; width: 38px; height: 38px; border-radius: 9px; display: flex;
+        align-items: center; justify-content: center; font-size: 19px; }
+      .nw-cartcount { position: absolute; top: 2px; right: 0; min-width: 18px; height: 18px; padding: 0 5px;
+        border-radius: 9px; background: var(--nw-green); color: #fff; font-size: 11px; font-weight: 700;
+        display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.34, 1.32, 0.5, 1); }
+      .nw-cartcount.bump { transform: scale(1.45); }
+
+      .nw-hero { padding: 40px 30px 6px; max-width: 1080px; margin: 0 auto; }
+      .nw-crumb { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--nw-green); }
+      .nw-hero h1 { font-family: var(--font-display); font-size: 38px; font-weight: 700; color: #1c2620;
+        margin: 10px 0 0; letter-spacing: -0.02em; max-width: 560px; line-height: 1.06; }
+      .nw-hero p { font-size: 15px; color: #48564d; margin: 12px 0 0; max-width: 520px; line-height: 1.5; }
+
+      section { scroll-margin-top: 74px; }
+      .nw-section { display: flex; align-items: baseline; justify-content: space-between; padding: 26px 30px 0; max-width: 1080px; margin: 0 auto; }
+      .nw-section h2 { font-family: var(--font-display); font-size: 22px; color: #1c2620; font-weight: 600; transition: color 0.4s; }
+      .nw-section h2.flash { color: var(--nw-green); }
+      .nw-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 16px 30px 12px; max-width: 1080px; margin: 0 auto; }
+      .nw-card { background: #fffefb; border: 1px solid #e6e7e1; border-radius: 14px; overflow: hidden;
+        transition: box-shadow 0.25s, transform 0.25s, outline-color 0.4s; outline: 0 solid transparent; }
+      .nw-card:hover { box-shadow: 0 14px 30px -12px rgba(31, 51, 38, 0.18); transform: translateY(-2px); }
+      .nw-highlight { outline: 3px solid #2a6fdb; outline-offset: 3px; }
+      .nw-thumb { height: 124px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+      .nw-body { padding: 13px 14px 15px; }
+      .nw-name { font-weight: 600; font-size: 14px; color: #1c2620; }
+      .nw-cat { font-size: 12px; color: #8a958d; margin-top: 1px; text-transform: capitalize; }
+      .nw-row { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; }
+      .nw-price { font-weight: 700; font-size: 15px; color: #1c2620; }
+      .nw-add { height: 32px; padding: 0 13px; border-radius: 8px; border: 1px solid #d4d8cf; background: #fff;
+        color: #1f3326; font-family: var(--font-sans); font-weight: 600; font-size: 12.5px; cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, color 0.15s; }
+      .nw-add:hover { background: var(--nw-green); color: #fff; border-color: var(--nw-green); }
+      .nw-add.flash { background: var(--nw-green); color: #fff; border-color: var(--nw-green); }
+      .nw-foot { max-width: 1080px; margin: 40px auto 0; padding: 28px 30px 80px; border-top: 1px solid #e6e7e1;
+        color: #8a958d; font-size: 13px; }
+
+      .nw-toasts { position: fixed; top: 16px; right: 16px; z-index: 40; display: flex; flex-direction: column; gap: 8px; }
+      .nw-toast { min-width: 220px; max-width: 320px; padding: 11px 14px; border-radius: 10px; font-size: 13.5px;
+        font-weight: 500; color: #1c2620; background: #fffefb; border: 1px solid #e6e7e1;
+        box-shadow: 0 14px 34px -14px rgba(31, 51, 38, 0.35); animation: nw-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1); }
+      .nw-toast.success { border-color: #bfe2cc; background: #ecfaf0; }
+      .nw-toast.error { border-color: #f3c9cb; background: #fdeced; }
+      .nw-toast.out { opacity: 0; transform: translateX(12px); transition: opacity 0.3s, transform 0.3s; }
+      @keyframes nw-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+    </style>
+  </head>
+  <body>
+    <nav class="nw-nav">
+      <a class="nw-logo" data-page="home"><span class="nw-leaf">▲</span> Northwind</a>
+      <div class="nw-links">
+        <a data-page="home">Home</a>
+        <a data-page="outerwear">Outerwear</a>
+        <a data-page="packs">Packs</a>
+        <a data-page="camp">Camp</a>
+        <a data-page="accessories">Accessories</a>
+      </div>
+      <div class="nw-nav-right">
+        <div class="nw-cart" title="Cart">🛒<span class="nw-cartcount" id="nw-cart">0</span></div>
+      </div>
+    </nav>
+
+    <header class="nw-hero">
+      <span class="nw-crumb" id="nw-crumb">All gear</span>
+      <h1>Gear that earns its place in your pack.</h1>
+      <p>Open the assistant (bottom-right) and try: "show me the trail jacket", "take me to
+        camp", "add two pairs of merino socks", or "what's in my cart?" — watch it act on this page.</p>
+    </header>
+
+    <section class="nw-page" data-page="outerwear" id="outerwear">
+      <div class="nw-section"><h2>Outerwear</h2></div>
+      <div class="nw-grid">
+        <div class="nw-card" data-name="Trail Jacket" data-cat="outerwear" data-price="189">
+          <div class="nw-thumb" style="background: #e8efe9">🧥</div>
+          <div class="nw-body"><div class="nw-name">Trail Jacket</div><div class="nw-cat">Outerwear</div>
+            <div class="nw-row"><span class="nw-price">$189</span><button class="nw-add">Add to cart</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nw-page" data-page="packs" id="packs">
+      <div class="nw-section"><h2>Packs</h2></div>
+      <div class="nw-grid">
+        <div class="nw-card" data-name="Summit 45 Pack" data-cat="packs" data-price="230">
+          <div class="nw-thumb" style="background: #eceae3">🎒</div>
+          <div class="nw-body"><div class="nw-name">Summit 45 Pack</div><div class="nw-cat">Packs</div>
+            <div class="nw-row"><span class="nw-price">$230</span><button class="nw-add">Add to cart</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nw-page" data-page="camp" id="camp">
+      <div class="nw-section"><h2>Camp</h2></div>
+      <div class="nw-grid">
+        <div class="nw-card" data-name="Carbon Trekking Poles" data-cat="camp" data-price="120">
+          <div class="nw-thumb" style="background: #e7edf1">🎿</div>
+          <div class="nw-body"><div class="nw-name">Carbon Trekking Poles</div><div class="nw-cat">Camp</div>
+            <div class="nw-row"><span class="nw-price">$120</span><button class="nw-add">Add to cart</button></div></div>
+        </div>
+        <div class="nw-card" data-name="Ridgeline 2 Tent" data-cat="camp" data-price="349">
+          <div class="nw-thumb" style="background: #efe9ec">⛺</div>
+          <div class="nw-body"><div class="nw-name">Ridgeline 2 Tent</div><div class="nw-cat">Camp</div>
+            <div class="nw-row"><span class="nw-price">$349</span><button class="nw-add">Add to cart</button></div></div>
+        </div>
+        <div class="nw-card" data-name="Trail Stove" data-cat="camp" data-price="69">
+          <div class="nw-thumb" style="background: #f1ebe6">🔥</div>
+          <div class="nw-body"><div class="nw-name">Trail Stove</div><div class="nw-cat">Camp</div>
+            <div class="nw-row"><span class="nw-price">$69</span><button class="nw-add">Add to cart</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="nw-page" data-page="accessories" id="accessories">
+      <div class="nw-section"><h2>Accessories</h2></div>
+      <div class="nw-grid">
+        <div class="nw-card" data-name="Merino Wool Socks" data-cat="accessories" data-price="24">
+          <div class="nw-thumb" style="background: #eef0e6">🧦</div>
+          <div class="nw-body"><div class="nw-name">Merino Wool Socks</div><div class="nw-cat">Accessories</div>
+            <div class="nw-row"><span class="nw-price">$24</span><button class="nw-add">Add to cart</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="nw-foot">© 2026 Northwind Supply — a demo storefront with the BSquare agent injected.</footer>
+
+    <div class="nw-toasts" id="nw-toasts"></div>
+
+    <script src="./bsquare-widget.global.js"></script>
+    <script>
+      const $ = (sel, root = document) => root.querySelector(sel);
+      const cards = () => [...document.querySelectorAll('.nw-card')];
+      const PAGES = ['home', 'outerwear', 'packs', 'camp', 'accessories'];
+
+      // ---- page navigation (each category is a page; "home" shows everything) ----
+      function setPage(page) {
+        const raw = String(page || '').toLowerCase().trim();
+        // tolerate fuzzy values from the agent: "Camp", "camp page", "the camp section" → "camp"
+        const p = PAGES.find((id) => id === raw)
+          || PAGES.find((id) => id !== 'home' && raw.includes(id))
+          || 'home';
+        document.querySelectorAll('.nw-page').forEach((sec) => {
+          sec.hidden = !(p === 'home' || sec.dataset.page === p);
+        });
+        document.querySelectorAll('.nw-links a').forEach((a) => a.classList.toggle('active', a.dataset.page === p));
+        $('#nw-crumb').textContent = p === 'home' ? 'All gear' : p.charAt(0).toUpperCase() + p.slice(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return p;
+      }
+      document.querySelectorAll('[data-page]').forEach((el) => {
+        el.addEventListener('click', () => setPage(el.dataset.page));
+      });
+
+      // ---- cart state (contents, not just a count) ----
+      const cart = {}; // name -> { qty, price }
+      function cartCount() { return Object.values(cart).reduce((s, i) => s + i.qty, 0); }
+      function cartTotal() { return Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0); }
+      function renderCart() {
+        const c = $('#nw-cart');
+        c.textContent = String(cartCount());
+        c.classList.add('bump');
+        setTimeout(() => c.classList.remove('bump'), 320);
+      }
+      function flashAdd(btn) {
+        if (!btn) return;
+        const orig = btn.textContent;
+        btn.classList.add('flash');
+        btn.textContent = 'Added ✓';
+        setTimeout(() => { btn.classList.remove('flash'); btn.textContent = orig; }, 1400);
+      }
+      function findCard(name) {
+        const q = String(name).toLowerCase();
+        return cards().find((c) => c.dataset.name.toLowerCase() === q)
+          || cards().find((c) => c.dataset.name.toLowerCase().includes(q));
+      }
+      function addToCart(card, qty) {
+        const name = card.dataset.name;
+        const price = Number(card.dataset.price) || 0;
+        cart[name] = { qty: (cart[name]?.qty || 0) + qty, price };
+        flashAdd($('.nw-add', card));
+        renderCart();
+      }
+      function toast(message, level) {
+        const t = document.createElement('div');
+        t.className = 'nw-toast ' + (level || 'info');
+        t.textContent = message;
+        $('#nw-toasts').appendChild(t);
+        setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 3200);
+      }
+      // manual "Add to cart" buttons behave just like the agent's add_to_cart
+      cards().forEach((card) => $('.nw-add', card).addEventListener('click', () => addToCart(card, 1)));
+
+      function clearHighlights() {
+        cards().forEach((c) => c.classList.remove('nw-highlight'));
+      }
+
+      // ---- host actions the agent can call -----------------------------------
+      const hostActions = [
+        {
+          name: 'navigate_to_page',
+          description: 'Switch the store to a page (home, outerwear, packs, camp, accessories)',
+          parameters: { page: { type: 'string', description: 'Page id', required: true } },
+          handler: (p) => ({ success: true, page: setPage(p.page) }),
+        },
+        {
+          name: 'highlight_products',
+          description: 'Spotlight a single product (by exact name) or a whole category',
+          parameters: {
+            product: { type: 'string', description: 'Exact product name to spotlight ONE item', required: false },
+            category: { type: 'string', description: 'Category or "all" to spotlight a group', required: false },
+          },
+          handler: (p) => {
+            clearHighlights();
+            if (p.product) {
+              const card = findCard(p.product);
+              if (!card) throw new Error('No such product: ' + p.product);
+              setPage(card.dataset.cat);
+              card.classList.add('nw-highlight');
+              setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+              setTimeout(() => card.classList.remove('nw-highlight'), 4000);
+              return { success: true, product: card.dataset.name };
+            }
+            const cat = String(p.category || 'all').toLowerCase();
+            setPage(cat === 'all' ? 'home' : cat);
+            const hits = cards().filter((c) => cat === 'all' || c.dataset.cat === cat);
+            hits.forEach((c) => c.classList.add('nw-highlight'));
+            setTimeout(() => hits[0] && hits[0].scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+            setTimeout(() => hits.forEach((c) => c.classList.remove('nw-highlight')), 4000);
+            return { success: true, category: cat, count: hits.length };
+          },
+        },
+        {
+          name: 'add_to_cart',
+          description: 'Add a product to the cart by its exact name; the counter updates',
+          parameters: {
+            product: { type: 'string', description: 'Exact product name', required: true },
+            quantity: { type: 'number', description: 'How many (default 1)', required: false },
+          },
+          handler: (p) => {
+            const qty = Math.max(1, parseInt(p.quantity, 10) || 1);
+            const card = findCard(p.product);
+            if (!card) throw new Error('No such product: ' + p.product);
+            addToCart(card, qty);
+            return { success: true, product: card.dataset.name, quantity: qty, cart_count: cartCount() };
+          },
+        },
+        {
+          name: 'get_cart',
+          description: 'Read the current cart contents (items, quantities, total)',
+          parameters: {},
+          handler: () => ({
+            success: true,
+            items: Object.entries(cart).map(([product, i]) => ({ product, quantity: i.qty, price: i.price })),
+            count: cartCount(),
+            total: cartTotal(),
+          }),
+        },
+        {
+          name: 'show_notification',
+          description: 'Show a toast notification on the store page',
+          parameters: {
+            message: { type: 'string', description: 'Text to display', required: true },
+            level: { type: 'string', description: 'info | success | error', required: false },
+          },
+          handler: (p) => {
+            // Ignore calls without a message so we don't pop an empty toast.
+            if (!p || !p.message) return { success: false, error: 'missing message' };
+            toast(p.message, p.level);
+            return { success: true };
+          },
+        },
+      ];
+
+      setPage('home');
+      window.BSquare.mountAgent({
+        apiUrl: 'http://localhost:8010', // store-demo backend (BACKEND_PORT default)
+        agentName: 'Northwind Assistant', // configurable header name
+        welcomeMessage: 'Hi! I can find gear, add it to your cart, and show you around the store. What are you after?',
+        toolDisplay: 'detailed', // show each host action's result row (default is 'minimal')
+        suggestions: [ // starter chips — clicking one sends it as the first message
+          'Show me the trail jacket',
+          'Take me to the camp page',
+          'Add a Summit 45 Pack to my cart',
+          "What's in my cart?",
+        ],
+        hostActions,
+      });
+    </script>
+  </body>
+</html>
