@@ -9,7 +9,7 @@ host page's DOM through **host actions**.
 | Package | Where | Install |
 |---------|-------|---------|
 | `bsquare-widget` (npm) | `packages/widget` | `npm i bsquare-widget` |
-| `bsquare-host` (pip) | `packages/host` | `pip install bsquare-host` |
+| `getbsquare` (pip) | `packages/host` | `pip install getbsquare` |
 
 ## 60-second tour
 
@@ -105,7 +105,7 @@ Automated publishing is also available via GitHub Actions workflow
 
 1. Add repository secrets:
   - `NPM_TOKEN` (npm automation token with publish rights)
-2. Configure PyPI Trusted Publisher for `bsquare-host` (PyPI project settings)
+2. Configure PyPI Trusted Publisher for `getbsquare` (PyPI project settings)
   to trust this GitHub repository/workflow.
 3. Open Actions -> `Publish Packages` -> `Run workflow`.
 4. Choose `all`, `widget`, or `host`.

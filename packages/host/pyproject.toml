@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "bsquare-host"
+name = "getbsquare"
 version = "0.1.0"
 description = "Backend host-action coordination for injectable AG-UI / PydanticAI agents"
 readme = "README.md"

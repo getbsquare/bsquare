@@ -51,7 +51,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-host:
-    name: Publish PyPI package (bsquare-host)
+    name: Publish PyPI package (getbsquare)
     if: github.event.inputs.target == 'all' || github.event.inputs.target == 'host'
     runs-on: ubuntu-latest
     environment: publishing
@@ -91,7 +91,7 @@ jobs:
           import pathlib
           import tomllib
 
-          expected = "bsquare-host"
+          expected = "getbsquare"
           pyproject = pathlib.Path("packages/host/pyproject.toml")
           data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
           actual = data["project"]["name"]
