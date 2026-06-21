@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir /app/packages/host "pydantic-ai" "uvicorn[standar
 
 COPY examples/store-demo/backend /app/backend
 WORKDIR /app/backend
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]
