@@ -18,6 +18,7 @@ jobs:
     name: Publish npm package (bsquare-widget)
     if: github.event.inputs.target == 'all' || github.event.inputs.target == 'widget'
     runs-on: ubuntu-latest
+    environment: publishing
     permissions:
       contents: read
       id-token: write
@@ -53,6 +54,7 @@ jobs:
     name: Publish PyPI package (bsquare-host)
     if: github.event.inputs.target == 'all' || github.event.inputs.target == 'host'
     runs-on: ubuntu-latest
+    environment: publishing
     permissions:
       contents: read
       id-token: write
@@ -68,7 +70,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install build twine pytest pytest-asyncio httpx
+          python -m pip install -e '.[dev]' build twine
+        working-directory: packages/host
 
       - name: Run tests
         run: pytest
