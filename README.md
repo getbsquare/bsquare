@@ -94,21 +94,3 @@ cd packages/host && python -m venv .venv && . .venv/bin/activate && pip install 
 ## License
 
 MIT
-
-## Publishing (maintainers)
-
-- npm: `cd packages/widget && npm publish` (runs the build via `prepublishOnly`).
-- pip: `cd packages/host && python -m build && twine upload dist/*`.
-
-Automated publishing is also available via GitHub Actions workflow
-`Publish Packages`.
-
-1. Add repository secrets:
-  - `NPM_TOKEN` (npm automation token with publish rights)
-2. Configure PyPI Trusted Publisher for `getbsquare` (PyPI project settings)
-  to trust this GitHub repository/workflow.
-3. Open Actions -> `Publish Packages` -> `Run workflow`.
-4. Choose `all`, `widget`, or `host`.
-
-Neither package is published automatically; do it deliberately with your own
-credentials. Consider an `@scope` for the npm name if you create an npm org.
