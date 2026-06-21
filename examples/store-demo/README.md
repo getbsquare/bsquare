@@ -1,24 +1,25 @@
 # Store demo — the agent acting on a live storefront
 
 A richer companion to [`../single-agent`](../single-agent). The minimal example shows
-*how to wire an agent up*; this one shows *what host actions can do*: the agent
+_how to wire an agent up_; this one shows _what host actions can do_: the agent
 switches between category pages, spotlights a specific item (or a whole category),
 adds items to the cart (which tracks its contents), reads the cart back, and shows
 toasts — all on a third-party "Northwind Supply" store the widget is injected into.
 
 Five host actions, each backed by a matching PydanticAI tool:
 
-| Host action | What it does on the page |
-|-------------|--------------------------|
-| `navigate_to_page` | switches the store to a category page (home / outerwear / packs / camp / accessories) and updates the active nav |
-| `highlight_products` | spotlights ONE item (`product="Trail Jacket"`) or a whole category (`category="camp"`) |
-| `add_to_cart` | flashes the product and updates the cart (contents + count) |
-| `get_cart` | reads back the current cart items, quantities, and total |
-| `show_notification` | drops a toast (info / success / error) |
+| Host action          | What it does on the page                                                                                         |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `navigate_to_page`   | switches the store to a category page (home / outerwear / packs / camp / accessories) and updates the active nav |
+| `highlight_products` | spotlights ONE item (`product="Trail Jacket"`) or a whole category (`category="camp"`)                           |
+| `add_to_cart`        | flashes the product and updates the cart (contents + count)                                                      |
+| `get_cart`           | reads back the current cart items, quantities, and total                                                         |
+| `show_notification`  | drops a toast (info / success / error)                                                                           |
 
 ## Setup
 
 1. Build the widget bundle:
+
    ```bash
    (cd ../../packages/widget && npm install && npm run build)
    cp ../../packages/widget/dist/bsquare-widget.global.js web/
@@ -39,6 +40,7 @@ docker compose up --build
 Then open http://localhost/web/index.html (or use Coolify deployment URLs).
 
 Try these prompts:
+
 - "show me the trail jacket"
 - "take me to the camp page"
 - "highlight the packs"

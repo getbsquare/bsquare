@@ -12,6 +12,7 @@ hand data back for the widget to render. Its handler returns
 ## Setup
 
 1. Build the widget bundle:
+
    ```bash
    (cd ../../packages/widget && npm install && npm run build)
    cp ../../packages/widget/dist/bsquare-widget.global.js web/
@@ -32,6 +33,7 @@ docker compose up --build
 Then open http://localhost/web/index.html (or use Coolify deployment URLs).
 
 Try these prompts:
+
 - "take me to the reports section"
 - "notify me that my order shipped"
 - "chart our quarterly sales: Q1 120, Q2 210, Q3 180, Q4 260"

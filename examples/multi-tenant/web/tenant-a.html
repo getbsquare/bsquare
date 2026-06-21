@@ -19,8 +19,13 @@
           handler: (p) => { const b = window.document.getElementById('banner'); b.textContent = p.message; return { success: true }; },
         },
       ];
+      // Determine dispatcher URL based on environment
+      const dispatcherUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8000'
+        : 'https://multi-tenant-demo-backend.getbsquare.com';
+
       window.BSquare.mountAgent({
-        apiUrl: 'http://localhost:8000',     // the dispatcher
+        apiUrl: dispatcherUrl,     // the dispatcher
         tenantId: 'tenant-a',
         apiToken: 'demo-token-tenant-a',
         theme: 'light',

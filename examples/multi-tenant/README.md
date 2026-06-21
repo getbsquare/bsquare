@@ -18,6 +18,7 @@ Each tenant gets its own backend instance and isolated conversation context.
 ## Setup
 
 1. Build the widget bundle:
+
    ```bash
    (cd ../../packages/widget && npm install && npm run build)
    cp ../../packages/widget/dist/bsquare-widget.global.js web/
@@ -36,6 +37,7 @@ docker compose up --build
 ```
 
 Then open:
+
 - http://localhost/web/tenant-a.html (tenant A)
 - http://localhost/web/tenant-b.html (tenant B)
 

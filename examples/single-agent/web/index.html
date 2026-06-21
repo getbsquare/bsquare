@@ -146,8 +146,13 @@
         },
       ];
 
+      // Determine API URL based on environment
+      const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8000'
+        : 'https://single-agent-demo-backend.getbsquare.com';
+
       window.BSquare.mountAgent({
-        apiUrl: "http://localhost:8000",
+        apiUrl: apiUrl,
         theme: "dark", // BSquare is dark-first; the dark widget on this light page shows Shadow-DOM isolation
         hostActions,
       });

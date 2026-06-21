@@ -1,6 +1,6 @@
 # ─────────────────────────────────────────────────────────────
 # BSquare Multi-tenant Example — Docker Compose
-# 
+#
 # One dispatcher routes a single widget bundle to multiple tenant
 # backends, each with their own API endpoint and data.
 #
@@ -14,7 +14,7 @@
 # The dispatcher.py proxies requests based on X-Tenant-ID header
 # or ?tenant_id= query parameter to the appropriate backend.
 # ─────────────────────────────────────────────────────────────
-version: '3.8'
+version: "3.8"
 
 services:
   dispatcher:

@@ -300,9 +300,14 @@
         },
       ];
 
+      // Determine API URL based on environment
+      const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8010'
+        : 'https://store-demo-backend.getbsquare.com';
+
       setPage('home');
       window.BSquare.mountAgent({
-        apiUrl: 'http://localhost:8010', // store-demo backend (BACKEND_PORT default)
+        apiUrl: apiUrl, // store-demo backend
         agentName: 'Northwind Assistant', // configurable header name
         welcomeMessage: 'Hi! I can find gear, add it to your cart, and show you around the store. What are you after?',
         toolDisplay: 'detailed', // show each host action's result row (default is 'minimal')
