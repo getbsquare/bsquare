@@ -85,6 +85,24 @@ jobs:
         run: twine check dist/*
         working-directory: packages/host
 
+      - name: Preflight Trusted Publisher metadata
+        run: |
+          python - <<'PY'
+          import pathlib
+          import tomllib
+
+          expected = "bsquare-host"
+          pyproject = pathlib.Path("packages/host/pyproject.toml")
+          data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+          actual = data["project"]["name"]
+          print(f"PyPI project name from metadata: {actual}")
+          if actual != expected:
+            raise SystemExit(
+              f"Trusted Publisher mismatch: expected '{expected}' but got '{actual}'. "
+              "Update packages/host/pyproject.toml or PyPI Trusted Publisher settings."
+            )
+          PY
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
