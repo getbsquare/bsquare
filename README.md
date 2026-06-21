@@ -100,5 +100,14 @@ MIT
 - npm: `cd packages/widget && npm publish` (runs the build via `prepublishOnly`).
 - pip: `cd packages/host && python -m build && twine upload dist/*`.
 
+Automated publishing is also available via GitHub Actions workflow
+`Publish Packages`.
+
+1. Add repository secrets:
+  - `NPM_TOKEN` (npm automation token with publish rights)
+  - `PYPI_API_TOKEN` (PyPI token for `bsquare-host`)
+2. Open Actions -> `Publish Packages` -> `Run workflow`.
+3. Choose `all`, `widget`, or `host`.
+
 Neither package is published automatically; do it deliberately with your own
 credentials. Consider an `@scope` for the npm name if you create an npm org.
