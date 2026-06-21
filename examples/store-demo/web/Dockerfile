@@ -1,7 +1,19 @@
+FROM node:20-alpine AS widget-builder
+WORKDIR /build/packages/widget
+
+# Install and build widget bundle from the monorepo package.
+COPY packages/widget/package*.json ./
+RUN npm ci
+COPY packages/widget/ ./
+RUN npm run build
+
 FROM nginx:1.27-alpine
 
-# Copy the store-demo web files into the nginx root
-COPY ./ /usr/share/nginx/html/
+# Copy store-demo index.html
+COPY examples/store-demo/web/index.html /usr/share/nginx/html/index.html
+
+# Copy built widget bundle so window.BSquare is always available.
+COPY --from=widget-builder /build/packages/widget/dist/bsquare-widget.global.js /usr/share/nginx/html/bsquare-widget.global.js
 
 # Use a simple nginx config that routes to the backend API
 COPY <<EOF /etc/nginx/conf.d/default.conf

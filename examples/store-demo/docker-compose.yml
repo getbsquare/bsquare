@@ -23,8 +23,8 @@ services:
 
   web:
     build:
-      context: ./web
-      dockerfile: Dockerfile
+      context: ../.. # bsquare/ monorepo root
+      dockerfile: examples/store-demo/web/Dockerfile
     container_name: bsquare-store-demo-web
     restart: unless-stopped
     expose:
